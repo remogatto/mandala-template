@@ -81,6 +81,14 @@ func TaskInit(t *tasking.T) {
 	}
 
 	// Rename paths accordly to app.LibName
+	if err = os.Rename("README.md", "README.md.bak"); err != nil {
+		t.Error(err)
+	}
+	if err = os.Rename("LICENSE", "LICENSE.bak"); err != nil {
+		t.Error(err)
+	}
+
+	// Rename paths accordly to app.LibName
 	if err = os.Rename("_task.go", strings.ToLower(app.LibName)+"_task.go"); err != nil {
 		t.Error(err)
 	}
