@@ -1,6 +1,6 @@
 # What's that?
 
-This repository represents a template for a Gorgasm application.
+This repository can be used as a template for a [gorgasm](https://github.com/remogatto/gorgasm) application.
 
 # Usage
 
