@@ -1,21 +1,18 @@
 # What's that?
 
-This repository can be used as a template for a [gorgasm](https://github.com/remogatto/gorgasm) application.
+<tt>gorgasm-template</tt> generates a scaffolding to quickly get you started for writing a [Gorgasm](https://github.com/remogatto/gorgasm) application.
 
 # Usage
 
 <pre>
-wget https://github.com/remogatto/gorgasm-template/archive/master.zip && unzip master.zip && rm master.zip
-mv gorgasm-template-master myapp
+go get https://github.com/remogatto/gorgasm-template
+gorgasm-template myapp
 cd myapp
+# Edit app.json for customization
 gotask init
 gotask run xorg # or
 gotask run android
 </pre>
-
-Edit [app.json](app.json) for customization. After invoking <tt>gotask
-init</tt> the original <tt>README.md</tt> and <tt>LICENSE</tt> will be renamed as
-<tt>README.md.bak</tt> and <tt>LICENSE.bak</tt>.
 
 # LICENSE
 
