@@ -5,7 +5,7 @@
 # Usage
 
 <pre>
-go get https://github.com/remogatto/gorgasm-template
+go get github.com/remogatto/gorgasm-template
 gorgasm-template myapp
 cd myapp
 # Edit app.json for customization
