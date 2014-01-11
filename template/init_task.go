@@ -16,6 +16,7 @@ import (
 var (
 	jsonPath      = "app.json"
 	templatePaths = []string{
+		"templates/README.md",
 		"templates/_task.go",
 		"templates/android/AndroidManifest.xml",
 		"templates/android/build.xml",
