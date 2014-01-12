@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/jingweno/gotask/tasking"
+	"github.com/remogatto/gotask/tasking"
 )
 
 var (
