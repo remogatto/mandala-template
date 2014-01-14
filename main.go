@@ -52,15 +52,15 @@ func copyFile(srcFile, dstPath, dstFile string) error {
 }
 
 func main() {
-	defaultInstallPath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/remogatto/gorgasm-template/")
+	defaultInstallPath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/remogatto/mandala-template/")
 	installPath := flag.String("install-path", defaultInstallPath, "Package installation directory")
 	help := flag.Bool("help", false, "Show usage")
 	verbose = flag.Bool("verbose", false, "Be verbose")
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "gorgasm-template - Create a template for a basic Gorgasm application\n\n")
+		fmt.Fprintf(os.Stderr, "mandala-template - Create a template for a basic Mandala application\n\n")
 		fmt.Fprintf(os.Stderr, "Usage:\n\n")
-		fmt.Fprintf(os.Stderr, "\tgorgasm-template [options] dirname\n\n")
+		fmt.Fprintf(os.Stderr, "\tmandala-template [options] dirname\n\n")
 		fmt.Fprintf(os.Stderr, "Options are:\n\n")
 		flag.PrintDefaults()
 	}
@@ -111,6 +111,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("A new Gorgasm template was successful created in %s\n", dstPath)
+	fmt.Printf("A new Mandala template was successful created in %s\n", dstPath)
 	fmt.Printf("Now:\n\n\tcd %s\n\tgotask init\n\tgotask run xorg # or\n\tgotask run android\n\n", dstPath)
 }
