@@ -4,7 +4,6 @@ package tasks
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -77,7 +76,6 @@ func TaskBuild(t *tasking.T) {
 //    --verbose, -v
 //        run in verbose mode
 func TaskRun(t *tasking.T) {
-	log.Println(t.Args)
 	TaskBuild(t)
 	for _, platform := range t.Args {
 		runFun[platform](t)
