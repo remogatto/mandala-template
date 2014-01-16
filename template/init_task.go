@@ -112,59 +112,54 @@ func readJSON(filename string) (*Application, error) {
 // Copy file from src to dest. Execute a template if file is in
 // templatePaths.
 func copyFile(src, dst string, app *Application) (err error) {
-	if dstFile, err := os.Open(dst); err == nil {
+	if _, err := os.Stat(dst); err == nil {
 		// file already exists, close and exit
-		dstFile.Close()
 		return nil
-	} else {
+	}
 
-		defer dstFile.Close()
+	// take directory name from dest path
+	dir := filepath.Dir(dst)
 
-		// take directory name from dest path
-		dir := filepath.Dir(dst)
+	// create the directory along with any necessary
+	// parents
+	err = os.MkdirAll(dir, 0777)
+	if err != nil {
+		return err
+	}
 
-		// create the directory along with any necessary
-		// parents
-		err = os.MkdirAll(dir, 0777)
-		if err != nil {
-			return err
-		}
+	// Open and read the source file
+	srcBuffer, err := ioutil.ReadFile(src)
+	if err != nil {
+		return err
+	}
 
-		// Open and read the source file
-		srcBuffer, err := ioutil.ReadFile(src)
-		if err != nil {
-			return err
-		}
+	// Create destination file and write source data into it
+	dstFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
 
-		// Create destination file and write source data into
-		// it
-		dstFile, err = os.Create(dst)
-
-		if err != nil {
-			return err
-		}
-
-		// Execute template if source file is in the template
-		// path
-		for _, tplPath := range templatePaths {
-			if src == tplPath {
-				tmpl, err := template.New(tplPath).Parse(string(srcBuffer))
-				if err != nil {
-					return err
-				}
-				err = tmpl.Execute(dstFile, app)
-				if err != nil {
-					return err
-				}
-				// We're done, exit.
-				return nil
+	// Execute template if source file is in the template path
+	for _, tplPath := range templatePaths {
+		if src == tplPath {
+			tmpl, err := template.New(tplPath).Parse(string(srcBuffer))
+			if err != nil {
+				return err
 			}
-		}
-		_, err = dstFile.Write(srcBuffer)
-		if err != nil {
-			return err
+			err = tmpl.Execute(dstFile, app)
+			if err != nil {
+				return err
+			}
+			// We're done, exit.
+			return nil
 		}
 	}
+	_, err = dstFile.Write(srcBuffer)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
