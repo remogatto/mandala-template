@@ -16,8 +16,7 @@ gotask run android
 
 # Black-box testing
 
-<mandala-template> generates a scaffolding for a black-box test of
-your application. To run the test:
+<tt>mandala-template</tt> generates a scaffolding for a black-box test. To run the test:
 
 <pre>
 cd test
