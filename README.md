@@ -14,6 +14,17 @@ gotask run xorg # or
 gotask run android
 </pre>
 
+# Black-box testing
+
+<mandala-template> generates a scaffolding for a black-box test of
+your application. To run the test:
+
+<pre>
+cd test
+gotask test xorg # or
+gotask test android
+</pre>
+
 # LICENSE
 
 See [LICENSE](LICENSE).
