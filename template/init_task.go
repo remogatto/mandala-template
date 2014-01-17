@@ -16,6 +16,13 @@ import (
 var (
 	jsonPath      = "app.json"
 	templatePaths = []string{
+		"templates/test/android/res/values/strings.xml",
+		"templates/test/android/build.xml",
+		"templates/test/android/AndroidManifest.xml",
+		"templates/test/src/runner/runner.go",
+		"templates/test/src/runner/runner_android.go",
+		"templates/test/test_task.go",
+		"templates/test/README.md",
 		"templates/README.md",
 		"templates/_task.go",
 		"templates/android/AndroidManifest.xml",
@@ -28,13 +35,11 @@ var (
 )
 
 type Application struct {
-	Domain  string
-	LibName string
-	AppName string
-}
-
-func (p *Application) GetFullDomain() string {
-	return p.Domain + "." + p.LibName
+	Domain      string
+	TestDomain  string
+	LibName     string
+	TestLibName string
+	AppName     string
 }
 
 // NAME
@@ -82,16 +87,23 @@ func TaskInit(t *tasking.T) {
 	}
 
 	// Rename paths accordly to app.LibName
+
 	if err = os.Rename("_task.go", strings.ToLower(app.LibName)+"_task.go"); err != nil {
 		t.Error(err)
 	}
+
 	if err = os.Rename("src/_app", filepath.Join("src", strings.ToLower(app.LibName))); err != nil {
+		t.Error(err)
+	}
+
+	if err = os.Rename("test/src/_app", filepath.Join("test/src/", strings.ToLower(app.TestLibName))); err != nil {
 		t.Error(err)
 	}
 
 	if t.Failed() {
 		t.Fatalf("%-20s %s\n", status(t.Failed()), "Initialize a new Mandala application")
 	}
+
 	t.Logf("%-20s %s\n", status(t.Failed()), "Initialize a new Mandala application")
 }
 
@@ -169,10 +181,6 @@ func green(text string) string {
 
 func red(text string) string {
 	return "\033[31m" + text + "\033[0m"
-}
-
-func yellow(text string) string {
-	return "\033[33m" + text + "\033[0m"
 }
 
 func status(failed bool) string {
