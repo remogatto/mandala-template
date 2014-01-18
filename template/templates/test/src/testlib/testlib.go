@@ -2,19 +2,20 @@ package testlib
 
 import (
 	"fmt"
-	"os"
+	"image"
 	"runtime"
 	"time"
 
 	"git.tideland.biz/goas/loop"
 	"github.com/remogatto/mandala"
+	"github.com/remogatto/mandala/test/src/testlib"
 	gl "github.com/remogatto/opengles2"
 	"github.com/remogatto/prettytest"
 )
 
 const (
-	FRAMES_PER_SECOND = 15
-	TIMEOUT           = time.Second * 15
+	// I don't need high framerate for testing
+	FramesPerSecond = 15
 )
 
 type TestSuite struct {
@@ -23,7 +24,7 @@ type TestSuite struct {
 	rlControl *renderLoopControl
 	timeout   <-chan time.Time
 
-	testDraw chan bool
+	testDraw chan image.Image
 }
 
 type renderLoopControl struct {
@@ -42,17 +43,22 @@ func (renderState *renderState) init(window mandala.Window) {
 
 	// Set the viewport
 	gl.Viewport(0, 0, gl.Sizei(width), gl.Sizei(height))
-	gl.ClearColor(0.0, 0.0, 0.0, 1.0)
+	gl.ClearColor(1.0, 0.0, 0.0, 1.0)
 }
 
 func (renderState *renderState) draw() {
-	gl.Clear(gl.COLOR_BUFFER_BIT)
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
 func newRenderLoopControl() *renderLoopControl {
 	return &renderLoopControl{
-		make(chan mandala.Window),
+		window: make(chan mandala.Window),
 	}
+}
+
+// Timeout timeouts the tests after the given duration.
+func (t *TestSuite) Timeout(timeout time.Duration) {
+	t.timeout = time.After(timeout)
 }
 
 // Run runs renderLoop. The loop renders a frame and swaps the buffer
@@ -73,25 +79,22 @@ func (t *TestSuite) renderLoopFunc(control *renderLoopControl) loop.LoopFunc {
 		// Create an instance of ticker and immediately stop
 		// it because we don't want to swap buffers before
 		// initializing a rendering state.
-		ticker := time.NewTicker(time.Duration(1e9 / int(FRAMES_PER_SECOND)))
+		ticker := time.NewTicker(1)
 		ticker.Stop()
 
 		for {
 			select {
 			case window := <-control.window:
-				ticker.Stop()
 				renderState.init(window)
-				ticker = time.NewTicker(time.Duration(1e9 / int(FRAMES_PER_SECOND)))
+				// restart the ticker with the right
+				// duration
+				ticker = time.NewTicker(time.Duration(time.Second / time.Duration(FramesPerSecond)))
 
 			// At each tick render a frame and swap buffers.
 			case <-ticker.C:
 				renderState.draw()
 				renderState.window.SwapBuffers()
-				t.testDraw <- true
-
-			case <-loop.ShallStop():
-				ticker.Stop()
-				return nil
+				t.testDraw <- testlib.Screenshot(renderState.window)
 			}
 		}
 	}
@@ -117,19 +120,15 @@ func (t *TestSuite) eventLoopFunc(renderLoopControl *renderLoopControl) loop.Loo
 				case mandala.NativeWindowCreatedEvent:
 					renderLoopControl.window <- event.Window
 
-					// Finger down/up on the screen.
 				case mandala.ActionUpDownEvent:
 
-					// Finger is moving on the screen.
 				case mandala.ActionMoveEvent:
 
 				case mandala.NativeWindowDestroyedEvent:
 
 				case mandala.DestroyEvent:
-					// return nil
 
 				case mandala.NativeWindowRedrawNeededEvent:
-					mandala.Debugf("Redraw needed")
 
 				case mandala.PauseEvent:
 
@@ -177,28 +176,25 @@ func (t *TestSuite) BeforeAll() {
 		},
 	)
 
-	// Start the timeout loop
-	loop.GoRecoverable(
-		t.timeoutLoopFunc(),
-		func(rs loop.Recoverings) (loop.Recoverings, error) {
-			for _, r := range rs {
-				mandala.Logf("%s", r.Reason)
-				mandala.Logf("%s", mandala.Stacktrace())
-			}
-			return rs, fmt.Errorf("Unrecoverable loop\n")
-		},
-	)
+	if t.timeout != nil {
+		// Start the timeout loop
+		loop.GoRecoverable(
+			t.timeoutLoopFunc(),
+			func(rs loop.Recoverings) (loop.Recoverings, error) {
+				for _, r := range rs {
+					mandala.Logf("%s", r.Reason)
+					mandala.Logf("%s", mandala.Stacktrace())
+				}
+				return rs, fmt.Errorf("Unrecoverable loop\n")
+			},
+		)
+	}
 
-}
-
-func (t *TestSuite) AfterAll() {
-	os.Exit(0)
 }
 
 func NewTestSuite() *TestSuite {
 	return &TestSuite{
 		rlControl: newRenderLoopControl(),
-		testDraw:  make(chan bool),
-		timeout:   time.After(TIMEOUT),
+		testDraw:  make(chan image.Image),
 	}
 }

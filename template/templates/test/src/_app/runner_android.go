@@ -7,6 +7,7 @@ import (
 
 	"testlib"
 	"github.com/remogatto/mandala"
+	mandalatest "github.com/remogatto/mandala/test/src/testlib"
 	"github.com/remogatto/prettytest"
 )
 
@@ -23,7 +24,7 @@ func main() {
 
 	go prettytest.RunWithFormatter(
 		t,
-		testlib.NewTDDFormatter(),
+		new(mandalatest.TDDFormatter),
 		testlib.NewTestSuite(),
 	)
 }
