@@ -24,7 +24,7 @@ func (t *TestSuite) TestDraw() {
 		exp, err := png.Decode(buffer)
 		t.True(err == nil, "An error occured during png decoding")
 
-		distance := imagetest.CompareDistance(exp, <-t.testDraw)
+		distance := imagetest.CompareDistance(exp, <-t.testDraw, nil)
 		t.True(distance < 0.1, fmt.Sprintf("Distance is %f", distance))
 	}
 }
