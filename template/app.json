@@ -3,8 +3,8 @@
     "LibName": "myapp",
     "TestLibName": "myapp_testrunner",
     "Domain":  "net.mandala",
-    "TestDomain": "net.mandala.test"
+    "TestDomain": "net.mandala.test",
+	"KeyStore": "",
+	"KeyAlias": ""
 }
-
-
 

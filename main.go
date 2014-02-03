@@ -113,4 +113,12 @@ func main() {
 	}
 	fmt.Printf("A new Mandala template was successful created in %s\n", dstPath)
 	fmt.Printf("Now:\n\n\tcd %s\n\tgotask init\n\tgotask run xorg # or\n\tgotask run android\n\n", dstPath)
+
+	releaseMsg := `To build the app in "release mode" for Android:
+
+        * in app.json, set "KeyStore" with the path to your keystore file
+        * in app.json, set "KeyAlias" with your key alias
+        * gotask release
+`
+	fmt.Println(releaseMsg)
 }

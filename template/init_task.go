@@ -40,6 +40,8 @@ type Application struct {
 	LibName     string
 	TestLibName string
 	AppName     string
+	KeyStore	string
+	KeyAlias	string
 }
 
 // NAME
