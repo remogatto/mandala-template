@@ -1,5 +1,4 @@
-// +build !android
-// +build !darwin
+// +build darwin
 
 package main
 
@@ -49,9 +48,6 @@ func main() {
 	}
 	defer glfw.Terminate()
 
-	// Enable OpenGL ES 2.0.
-	glfw.WindowHint(glfw.ClientApi, glfw.OpenglEsApi)
-	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	window, err := glfw.CreateWindow(width, height, "{{.AppName}}", nil, nil)
 	if err != nil {
 		panic(err)
