@@ -9,12 +9,12 @@ import (
 )
 
 func (t *TestSuite) TestDraw() {
-	request := mandala.LoadAssetRequest{
+	request := mandala.LoadResourceRequest{
 		Filename: "res/drawable/expected.png",
-		Response: make(chan mandala.LoadAssetResponse),
+		Response: make(chan mandala.LoadResourceResponse),
 	}
 
-	mandala.AssetManager() <- request
+	mandala.ResourceManager() <- request
 	response := <-request.Response
 	buffer := response.Buffer
 
