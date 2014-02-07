@@ -10,7 +10,7 @@ import (
 
 func (t *TestSuite) TestDraw() {
 	request := mandala.LoadResourceRequest{
-		Filename: "res/drawable/expected.png",
+		Filename: "drawable/expected.png",
 		Response: make(chan mandala.LoadResourceResponse),
 	}
 
