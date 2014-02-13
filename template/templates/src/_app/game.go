@@ -19,7 +19,7 @@ type viewportSize struct {
 
 type renderLoopControl struct {
 	resizeViewport chan viewportSize
-	pause          chan bool
+	pause          chan mandala.PauseEvent
 	resume         chan bool
 	window         chan mandala.Window
 }
@@ -30,10 +30,10 @@ var (
 
 func newRenderLoopControl() *renderLoopControl {
 	return &renderLoopControl{
-		make(chan viewportSize),
-		make(chan bool),
-		make(chan bool),
-		make(chan mandala.Window, 1),
+		resizeViewport: make(chan viewportSize),
+		pause:          make(chan mandala.PauseEvent),
+		resume:         make(chan bool),
+		window:         make(chan mandala.Window, 1),
 	}
 }
 
@@ -77,8 +77,9 @@ func renderLoopFunc(control *renderLoopControl) loop.LoopFunc {
 				draw()
 				window.SwapBuffers()
 
-			case <-control.pause:
+			case event := <-control.pause:
 				ticker.Stop()
+				event.Paused <- true
 
 			case <-control.resume:
 
@@ -160,7 +161,7 @@ func eventLoopFunc(renderLoopControl *renderLoopControl) loop.LoopFunc {
 
 				case mandala.PauseEvent:
 					mandala.Logf("Application was paused. Stopping rendering ticker.")
-					renderLoopControl.pause <- true
+					renderLoopControl.pause <- event
 
 				case mandala.ResumeEvent:
 					mandala.Logf("Application was resumed. Reactivating rendering ticker.")
