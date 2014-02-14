@@ -1,6 +1,7 @@
 package testlib
 
 import (
+	"bytes"
 	"fmt"
 	"image/png"
 
@@ -21,7 +22,7 @@ func (t *TestSuite) TestDraw() {
 	t.True(response.Error == nil, "An error occured during resource opening")
 
 	if buffer != nil {
-		exp, err := png.Decode(buffer)
+		exp, err := png.Decode(bytes.NewBuffer(buffer))
 		t.True(err == nil, "An error occured during png decoding")
 
 		distance := imagetest.CompareDistance(exp, <-t.testDraw, nil)
