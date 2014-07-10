@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"time"
 
-	"git.tideland.biz/goas/loop"
+	"github.com/tideland/goas/v2/loop"
 	"github.com/remogatto/mandala"
 	"github.com/remogatto/mandala/test/src/testlib"
 	gl "github.com/remogatto/opengles2"

@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"time"
 
-	"git.tideland.biz/goas/loop"
+	"github.com/tideland/goas/v2/loop"
 	"github.com/remogatto/mandala"
 	gl "github.com/remogatto/opengles2"
 )
