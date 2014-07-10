@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"git.tideland.biz/goas/loop"
+	"github.com/tideland/goas/v2/loop"
 	glfw "github.com/go-gl/glfw3"
 	"github.com/remogatto/mandala"
 )
